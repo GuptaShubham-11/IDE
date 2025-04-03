@@ -10,6 +10,7 @@ export interface IUser extends Document {
     avatar: string;
     createdAt: Date;
     updatedAt: Date;
+    isPasswordCorrect(password: string): Promise<boolean>;
     generateAccessToken(): string;
     generateRefreshToken(): string;
 }
