@@ -1,5 +1,3 @@
-'use client';
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import Spinner from "./Spinner";
 import { z } from "zod";
-import { Link } from "react-router-dom";
 
 type LoginFormValues = z.infer<typeof signInValidation>;
 
@@ -38,11 +35,14 @@ export default function SignInForm() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-bgL px-4">
+        <div className="flex items-center justify-center px-4">
             <div className="w-full max-w-md bg-card p-8 rounded-xl shadow-lg space-y-6 border border-border">
-                <h2 className="text-3xl font-semibold text-center text-textL">
-                    Welcome back
-                </h2>
+                <div className="text-center">
+                    <h2 className="text-3xl font-bold text-textL">Welcome Back</h2>
+                    <p className="text-secondaryL text-sm mt-1">
+                        Happy to see you again!
+                    </p>
+                </div>
 
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -118,11 +118,6 @@ export default function SignInForm() {
                 <div className="flex flex-col gap-4">
                     <Button variant="outline" className="w-full">Google</Button>
                 </div>
-
-                <p className="text-sm font-mono text-secondaryL text-center">
-                    Don't have an account?{" "}
-                    <Link to="/signup" className="text-primary underline">Sign up</Link>
-                </p>
             </div>
         </div>
     );

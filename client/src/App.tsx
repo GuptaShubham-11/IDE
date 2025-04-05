@@ -1,7 +1,9 @@
 import './App.css';
 import Header from './components/Header';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Price, SignUp, SignIn } from './components';
+import { Price } from './components';
+import { Authenticate } from './pages';
+
 
 function App() {
   return (
@@ -10,8 +12,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Header />} />
           <Route path="/price" element={<Price />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/signin" element={<SignIn />} />
+          <Route path="/authenticate/signup" element={<Authenticate flag={false} />} />
+          <Route path="/authenticate/signin" element={<Authenticate flag={true} />} />
         </Routes>
       </Router>
     </>

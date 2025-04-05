@@ -1,5 +1,3 @@
-'use client';
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import signUpValidation from "@/schemas/signUp";
@@ -17,7 +15,6 @@ import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import Spinner from "./Spinner";
 import { useState } from "react";
 import { z } from "zod";
-import { Link } from "react-router-dom";
 
 type SignUpFormValues = z.infer<typeof signUpValidation>;
 
@@ -48,7 +45,7 @@ export default function SignUpForm() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-bgL px-4">
+        <div className="flex items-center justify-center px-4">
             <div className="w-full max-w-md bg-card p-8 rounded-xl shadow-lg space-y-6 border border-border">
                 <div className="text-center">
                     <h2 className="text-3xl font-bold text-textL">Create Account</h2>
@@ -142,11 +139,6 @@ export default function SignUpForm() {
                 <div className="flex flex-col gap-4">
                     <Button variant="outline" className="w-full">Google</Button>
                 </div>
-
-                <p className="text-sm text-secondaryL font-mono text-center pt-2">
-                    Already have an account?{" "}
-                    <Link to="/signin" className="text-primary underline font-medium">Sign In</Link>
-                </p>
             </div>
         </div>
     );
