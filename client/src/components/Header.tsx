@@ -27,17 +27,10 @@ export default function Header() {
                     </Link>
                     <Button
                         variant="outline"
-                        className="rounded text-base px-4 py-2"
+                        className="rounded px-3 py-1"
                         onClick={() => navigate("/authenticate/signin")}
                     >
                         LOGIN
-                    </Button>
-                    <Button
-                        variant="default"
-                        onClick={() => navigate("/authenticate/signup")}
-                        className="rounded text-base px-4 py-2"
-                    >
-                        GET STARTED
                     </Button>
                 </nav>
 

@@ -1,6 +1,7 @@
 import Authenticate from "./Authenticate";
-
+import Home from "./Home";
 
 export {
-    Authenticate
+    Authenticate,
+    Home
 }
