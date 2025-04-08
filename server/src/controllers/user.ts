@@ -50,8 +50,22 @@ const signUp = asyncHandler(async (req, res) => {
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    if (existingUser && existingUser.verified) {
         throw new ApiError(400, 'User already exists with this email.');
+    } else if (existingUser && !existingUser.verified) {
+        existingUser.name = name;
+        existingUser.password = password;
+        existingUser.save({ validateBeforeSave: false });
+        res.status(200).json(
+            new ApiResponse(200, 'User registered successfully', {
+                user: {
+                    _id: existingUser._id,
+                    name: existingUser.name,
+                    email: existingUser.email,
+                },
+            })
+        );
+        return;
     }
 
     // Create new user
