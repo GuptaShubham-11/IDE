@@ -7,6 +7,7 @@ import signUpValidation from '../schemas/signUp';
 import signInValidation from '../schemas/signIn';
 import { emailVerificationValidation, emailValidation } from '../schemas/emailVarification';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { AuthenticatedRequest } from '../middlewares/auth';
 
 const generateAccessAndRefreshTokens = async (
     userId: string
@@ -292,7 +293,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     );
 });
 
-const getCurrentUser = asyncHandler(async (req, res) => {
+const getCurrentUser = asyncHandler(async (req: AuthenticatedRequest, res) => {
     res.status(200).json(
         new ApiResponse(200, "User found.", {
             user: req.user,
