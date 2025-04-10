@@ -6,6 +6,7 @@ import ZodErrorFormater from '../utils/ZodErrorFormater';
 import signUpValidation from '../schemas/signUp';
 import signInValidation from '../schemas/signIn';
 import { emailVerificationValidation, emailValidation } from '../schemas/emailVarification';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const generateAccessAndRefreshTokens = async (
     userId: string
@@ -264,9 +265,47 @@ const emailVerification = asyncHandler(async (req, res) => {
 
 });
 
+const refreshAccessToken = asyncHandler(async (req, res) => {
+    const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
+
+    if (!refreshToken) {
+        throw new ApiError(401, "No refresh token found");
+    }
+
+    const decoded = jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET as string
+    ) as JwtPayload;
+
+    const user = await User.findById(decoded._id);
+
+    if (!user) {
+        throw new ApiError(400, "User not found");
+    }
+
+    const accessToken = user.generateAccessToken();
+
+    res.status(200).json(
+        new ApiResponse(200, "Access token refreshed successfully", {
+            accessToken,
+        })
+    );
+});
+
+const getCurrentUser = asyncHandler(async (req, res) => {
+    res.status(200).json(
+        new ApiResponse(200, "User found.", {
+            user: req.user,
+        })
+    );
+});
+
+
 export {
     signUp,
     signIn,
     emailVerification,
     reSendVerificationEmail,
+    refreshAccessToken,
+    getCurrentUser
 };
