@@ -6,6 +6,8 @@ import SignIn from "./SignIn";
 import Main3d from "./Main3d";
 import Hero from "./Hero";
 import Alert from "./Alert";
+import ProtectedRoute from "./ProtectedRoute";
+import PublicRoute from "./PublicRoute";
 
 export {
     Header,
@@ -16,4 +18,6 @@ export {
     Main3d,
     Hero,
     Alert,
+    ProtectedRoute,
+    PublicRoute
 }

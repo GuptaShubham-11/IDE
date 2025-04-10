@@ -43,9 +43,19 @@ const resendVerificationEmail = async (userData: any) => {
     }
 }
 
+const getCurrentUser = async () => {
+    try {
+        const response = await apiClient.get('/users/current-user');
+        return response.data;
+    } catch (error: any) {
+        throw error.response.data;
+    }
+}
+
 export const userApi = {
     signUp,
     signIn,
     verifyEmail,
     resendVerificationEmail,
+    getCurrentUser
 }
