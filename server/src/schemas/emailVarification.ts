@@ -7,4 +7,8 @@ const emailVerificationValidation = z.object({
     .length(6, 'Verification code must be 6 characters long'),
 });
 
-export default emailVerificationValidation;
+const emailValidation = z.object({
+  email: z.string().email('Invalid email address'),
+});
+
+export { emailVerificationValidation, emailValidation };

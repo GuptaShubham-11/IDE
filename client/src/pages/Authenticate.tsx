@@ -1,19 +1,46 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SignUp, SignIn } from '@/components';
+import { SignUp, SignIn, Alert } from '@/components';
 import { UserPlus, LogIn, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import type { GlassAlertProps } from '@/components/Alert';
 
 export default function Authenticate({ flag = false }: { flag: boolean }) {
     const [isReturningUser, setIsReturningUser] = useState(flag);
+    const [alert, setAlert] = useState<GlassAlertProps | null>(null);
     const navigate = useNavigate();
 
     return (
         <div className="min-h-screen w-full bg-bgL flex flex-col items-center justify-center px-4 py-12">
-            <Button variant='ghost' className="absolute top-4 left-4 rounded hover:bg-secondaryL/10" onClick={() => navigate('/')}>
+            {/* Alert */}
+            <AnimatePresence>
+                {alert && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full max-w-xl px-4 z-50"
+                    >
+                        <Alert
+                            type={alert.type}
+                            title={alert.title}
+                            message={alert.message}
+                            onClose={() => setAlert(null)}
+                        />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Back Button */}
+            <Button
+                variant="ghost"
+                className="absolute top-4 left-4 rounded hover:bg-secondaryL/10"
+                onClick={() => navigate('/')}
+            >
                 <ArrowLeft />
-            </Button >
+            </Button>
+
             <div className="relative w-full max-w-md mt-2 space-y-8">
                 {/* Glow Background */}
                 <motion.div
@@ -38,7 +65,7 @@ export default function Authenticate({ flag = false }: { flag: boolean }) {
                             setIsReturningUser(false);
                             navigate('/authenticate/signup');
                         }}
-                        className={`z-10 cursor-pointer w-1/2 py-2 flex items-center justify-center gap-2 text-sm font-medium transition-all duration-300 ${!isReturningUser ? 'text-textL' : 'text-secondaryL'}`}
+                        className={`z-10 w-1/2 py-2 flex items-center justify-center gap-2 text-sm font-medium transition-all duration-300 ${!isReturningUser ? 'text-textL' : 'text-secondaryL'}`}
                     >
                         <UserPlus className="w-4 h-4" />
                         Create
@@ -48,7 +75,7 @@ export default function Authenticate({ flag = false }: { flag: boolean }) {
                             setIsReturningUser(true);
                             navigate('/authenticate/signin');
                         }}
-                        className={`z-10 cursor-pointer w-1/2 py-2 flex items-center justify-center gap-2 text-sm font-medium transition-all duration-300 ${isReturningUser ? 'text-textL' : 'text-secondaryL'}`}
+                        className={`z-10 w-1/2 py-2 flex items-center justify-center gap-2 text-sm font-medium transition-all duration-300 ${isReturningUser ? 'text-textL' : 'text-secondaryL'}`}
                     >
                         <LogIn className="w-4 h-4" />
                         Login
@@ -56,7 +83,7 @@ export default function Authenticate({ flag = false }: { flag: boolean }) {
                 </div>
 
                 {/* Form Container */}
-                <div className="z-10 relative">
+                <div className="relative z-10">
                     <AnimatePresence mode="wait">
                         {isReturningUser ? (
                             <motion.div
@@ -66,7 +93,7 @@ export default function Authenticate({ flag = false }: { flag: boolean }) {
                                 exit={{ opacity: 0, y: -10 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <SignIn />
+                                <SignIn setAlert={setAlert} />
                             </motion.div>
                         ) : (
                             <motion.div
@@ -76,7 +103,7 @@ export default function Authenticate({ flag = false }: { flag: boolean }) {
                                 exit={{ opacity: 0, y: -10 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <SignUp />
+                                <SignUp setAlert={setAlert} />
                             </motion.div>
                         )}
                     </AnimatePresence>

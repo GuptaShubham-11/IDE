@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { PlayCircle } from "lucide-react";
 import Main3d from "./Main3d";
 import { useNavigate } from "react-router-dom";
+import { Alert } from ".";
 
 export default function Hero() {
     const navigate = useNavigate();
@@ -68,6 +69,14 @@ export default function Hero() {
                     <Main3d />
                 </div>
             </div>
+
+            <Alert
+                type="success"
+                title="New Feature!"
+                message="Check out our new real-time collaboration feature!"
+                onClose={() => { }}
+            />
+
         </section>
     );
 }

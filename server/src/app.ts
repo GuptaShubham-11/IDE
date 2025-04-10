@@ -31,7 +31,7 @@ app.use(
     next: express.NextFunction
   ) => {
     console.error('❌ Error:', err.message);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({ message: err.message || 'Internal Server Error' });
   }
 );
 

@@ -10,12 +10,19 @@ import { Button } from "@/components/ui/button";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import Spinner from "./Spinner";
 import { z } from "zod";
+import { GlassAlertProps } from "./Alert";
+import { userApi } from "@/api/userApi";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { eligibleToVerify, signIn } from "@/features/authSlice";
 
 type LoginFormValues = z.infer<typeof signInValidation>;
 
-export default function SignInForm() {
+export default function SignInForm({ setAlert }: { setAlert: (alert: GlassAlertProps) => void }) {
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(signInValidation),
@@ -27,11 +34,41 @@ export default function SignInForm() {
 
     const onSubmit = async (data: LoginFormValues) => {
         setIsLoading(true);
-        console.log("Logging in with:", data);
-        // Simulate API call
-        setTimeout(() => {
+        try {
+            const response = await userApi.signIn(data);
+            if (response.statusCode === 200) {
+                setAlert({
+                    type: "success",
+                    title: "Authentication Successful",
+                    message: response.message,
+                });
+                response.data.user.verified ? (
+                    dispatch(signIn({
+                        user: response.data.user,
+                        accessToken: response.data?.accessToken,
+                        refreshToken: response.data?.refreshToken
+                    })),
+                    navigate("/dashboard")
+                ) : (
+                    dispatch(eligibleToVerify()),
+                    navigate(`/authenticate/verify-email/${response.data.user.email}`)
+                );
+            } else {
+                setAlert({
+                    type: "error",
+                    title: "Authentication Failed",
+                    message: response.message,
+                });
+            }
+        } catch (error: any) {
+            setAlert({
+                type: "error",
+                title: "Authentication Failed",
+                message: error.message || "Something went wrong during sign-in. Please try again.",
+            });
+        } finally {
             setIsLoading(false);
-        }, 5000);
+        }
     };
 
     return (

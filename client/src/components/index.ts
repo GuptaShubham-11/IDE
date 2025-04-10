@@ -5,6 +5,7 @@ import Spinner from "./Spinner";
 import SignIn from "./SignIn";
 import Main3d from "./Main3d";
 import Hero from "./Hero";
+import Alert from "./Alert";
 
 export {
     Header,
@@ -13,5 +14,6 @@ export {
     Spinner,
     SignIn,
     Main3d,
-    Hero
+    Hero,
+    Alert,
 }
