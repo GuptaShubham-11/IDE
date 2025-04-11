@@ -21,6 +21,15 @@ const signIn = async (userData: any) => {
     }
 }
 
+const signOut = async () => {
+    try {
+        const response = await apiClient.post('/users/sign-out');
+        return response.data;
+    } catch (error: any) {
+        throw error.response.data;
+    }
+}
+
 const verifyEmail = async (userData: any) => {
     try {
         const response = await apiClient.post('/users/verify-email', userData);
@@ -46,6 +55,8 @@ const resendVerificationEmail = async (userData: any) => {
 const getCurrentUser = async () => {
     try {
         const response = await apiClient.get('/users/current-user');
+        console.log(response.data);
+
         return response.data;
     } catch (error: any) {
         throw error.response.data;
@@ -55,6 +66,7 @@ const getCurrentUser = async () => {
 export const userApi = {
     signUp,
     signIn,
+    signOut,
     verifyEmail,
     resendVerificationEmail,
     getCurrentUser

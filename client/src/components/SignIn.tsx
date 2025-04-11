@@ -13,8 +13,9 @@ import { z } from "zod";
 import { GlassAlertProps } from "./Alert";
 import { userApi } from "@/api/userApi";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../hooks/redux";
 import { eligibleToVerify, signIn } from "@/features/authSlice";
+
 
 type LoginFormValues = z.infer<typeof signInValidation>;
 
@@ -22,7 +23,7 @@ export default function SignInForm({ setAlert }: { setAlert: (alert: GlassAlertP
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(signInValidation),
@@ -36,6 +37,8 @@ export default function SignInForm({ setAlert }: { setAlert: (alert: GlassAlertP
         setIsLoading(true);
         try {
             const response = await userApi.signIn(data);
+            console.log(response);
+
             if (response.statusCode === 200) {
                 setAlert({
                     type: "success",
@@ -43,11 +46,7 @@ export default function SignInForm({ setAlert }: { setAlert: (alert: GlassAlertP
                     message: response.message,
                 });
                 response.data.user.verified ? (
-                    dispatch(signIn({
-                        user: response.data.user,
-                        accessToken: response.data?.accessToken,
-                        refreshToken: response.data?.refreshToken
-                    })),
+                    dispatch(signIn({ user: response.data.user })),
                     navigate("/dashboard")
                 ) : (
                     dispatch(eligibleToVerify()),

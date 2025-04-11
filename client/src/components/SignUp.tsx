@@ -36,7 +36,7 @@ export default function SignUpForm({ setAlert }: { setAlert: (alert: GlassAlertP
                 setAlert({
                     type: "success",
                     title: "Authentication Successful",
-                    message: 'You have successfully signed up. Please login to continue.',
+                    message: 'Please login to verify your account.',
                 });
             } else {
                 setAlert({

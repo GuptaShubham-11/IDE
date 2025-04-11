@@ -7,16 +7,16 @@ interface Props {
     children: ReactNode;
 }
 
-const PublicRoute = ({ children }: Props) => {
+const PrivateRoute = ({ children }: Props) => {
     const { isAuthenticated, authLoading } = useAppSelector(state => state.auth);
 
     if (authLoading) return <Spinner />;
 
-    if (isAuthenticated) {
-        return <Navigate to="/dashboard" replace />;
+    if (!isAuthenticated) {
+        return <Navigate to="/" replace />;
     }
 
     return <>{children}</>;
 };
 
-export default PublicRoute;
+export default PrivateRoute;

@@ -1,6 +1,6 @@
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, RoundedBox, Text, Trail } from '@react-three/drei';
-import { useRef } from 'react';
+import { Suspense, useRef } from 'react';
 import * as THREE from 'three';
 import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
 
@@ -57,6 +57,7 @@ function Cube() {
                     anchorX="center"
                     anchorY="middle"
                     fillOpacity={1}
+                    material-toneMapped={false}
                     textAlign="center"
                 >
                     {text}
@@ -118,19 +119,21 @@ export default function Main3d() {
     return (
         <div className="w-full h-[50vh] sm:h-[55vh] md:h-[60vh] lg:h-[70vh] flex justify-center items-center">
             <Canvas shadows camera={{ position: [0, 0, 10], fov: 50 }}>
-                <color attach="transparent" args={['#F8F9FA']} />
-                <ambientLight intensity={0.6} />
-                <directionalLight position={[5, 10, 5]} intensity={1.8} color="#ffffff" castShadow />
-                <OrbitControls enableZoom={false} enableRotate={true} />
-                <EffectComposer>
-                    <Bloom intensity={0.7} luminanceThreshold={0.2} luminanceSmoothing={0.9} />
-                    <Vignette eskil={false} offset={0.1} darkness={0.5} />
-                </EffectComposer>
-                <Cube />
-                <OrbitingStar radius={4} speed={0.6} height={1} color="#3B82F6" direction="horizontal" />
-                <OrbitingStar radius={4} speed={0.35} height={1} color="#8B5CF6" direction="vertical" />
-                <OrbitingStar radius={4} speed={0.5} height={1} color="#E07A5F" direction="diagonal1" />
-                <OrbitingStar radius={4} speed={0.8} height={1} color="#3B82F6" direction="diagonal2" />
+                <Suspense fallback={null}>
+                    <color attach="transparent" args={['#121212']} />
+                    <ambientLight intensity={0.6} />
+                    <directionalLight position={[5, 10, 5]} intensity={1.8} color="#ffffff" castShadow />
+                    <OrbitControls enableZoom={false} enableRotate={true} />
+                    <EffectComposer>
+                        <Bloom intensity={0.7} luminanceThreshold={0.2} luminanceSmoothing={0.9} />
+                        <Vignette eskil={false} offset={0.1} darkness={0.5} />
+                    </EffectComposer>
+                    <Cube />
+                    <OrbitingStar radius={4} speed={0.6} height={1} color="#3B82F6" direction="horizontal" />
+                    <OrbitingStar radius={4} speed={0.35} height={1} color="#8B5CF6" direction="vertical" />
+                    <OrbitingStar radius={4} speed={0.5} height={1} color="#E07A5F" direction="diagonal1" />
+                    <OrbitingStar radius={4} speed={0.8} height={1} color="#3B82F6" direction="diagonal2" />
+                </Suspense>
             </Canvas>
         </div>
     );

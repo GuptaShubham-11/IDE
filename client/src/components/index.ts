@@ -6,7 +6,7 @@ import SignIn from "./SignIn";
 import Main3d from "./Main3d";
 import Hero from "./Hero";
 import Alert from "./Alert";
-import ProtectedRoute from "./ProtectedRoute";
+import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
 
 export {
@@ -18,6 +18,6 @@ export {
     Main3d,
     Hero,
     Alert,
-    ProtectedRoute,
+    PrivateRoute,
     PublicRoute
 }

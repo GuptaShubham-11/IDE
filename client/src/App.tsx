@@ -1,79 +1,33 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Price, PublicRoute, ProtectedRoute } from './components';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Authenticate, Dashboard, Home, VerifyEmail } from './pages';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from './store/store';
-import { userApi } from './api/userApi';
+import { Price, PublicRoute, PrivateRoute, Spinner } from './components';
 import { useEffect } from 'react';
-import { signIn } from './features/authSlice';
+import { useAppDispatch, useAppSelector } from './hooks/redux';
+import { checkSession } from './features/authSlice';
 
 function App() {
-  const isEligibleToVerify = useSelector((state: RootState) => state.auth.isEligibleToVerify);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const { isEligibleToVerify, authLoading } = useAppSelector(state => state.auth);
 
   useEffect(() => {
-    const getCurrentUser = async () => {
-      try {
-        const response = await userApi.getCurrentUser();
-        console.log(response);
+    dispatch(checkSession());
+  }, [dispatch]);
 
-        dispatch(signIn({ user: response.data.user }));
-      } catch (error: any) {
-        console.log(error.message);
-      }
-    }
-
-    getCurrentUser();
-  }, []);
+  if (authLoading) return <Spinner size={32} />;
 
   return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <PublicRoute>
-              <Home />
-            </PublicRoute>
-          }
-        />
-
-        <Route path="/price" element={<Price />} />
-
-        <Route
-          path="/authenticate/signup"
-          element={
-            <PublicRoute>
-              <Authenticate flag={false} />
-            </PublicRoute>
-          }
-        />
-
-        <Route
-          path="/authenticate/signin"
-          element={
-            <PublicRoute>
-              <Authenticate flag={true} />
-            </PublicRoute>
-          }
-        />
-
-        <Route
-          path="/authenticate/verify-email/:email"
-          element={isEligibleToVerify ? <VerifyEmail /> : <Navigate to="/" />}
-        />
-
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/" element={<PublicRoute><Home /></PublicRoute>} />
+      <Route path="/price" element={<Price />} />
+      <Route path="/authenticate/signup" element={<PublicRoute><Authenticate flag={false} /></PublicRoute>} />
+      <Route path="/authenticate/signin" element={<PublicRoute><Authenticate flag={true} /></PublicRoute>} />
+      <Route
+        path="/authenticate/verify-email/:email"
+        element={isEligibleToVerify ? <VerifyEmail /> : <Navigate to="/" replace />}
+      />
+      <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+    </Routes>
   );
 }
 

@@ -1,37 +1,70 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AppDispatch } from "../store/store";
+import apiClient from "@/api/apiClient";
 
-
-const initialState = {
-    user: null,
-    accessToken: null,
-    refreshToken: null,
-    isAuthenticated: false,
-    isEligibleToVerify: false
+interface User {
+    id: string;
+    name: string;
+    email: string;
 }
+
+interface AuthState {
+    user: User | null;
+    isAuthenticated: boolean;
+    isEligibleToVerify: boolean;
+    authLoading: boolean;
+}
+
+const initialState: AuthState = {
+    user: null,
+    isAuthenticated: false,
+    isEligibleToVerify: false,
+    authLoading: true,
+};
 
 const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
+        setAuthLoading: (state, action: PayloadAction<boolean>) => {
+            state.authLoading = action.payload;
+        },
         eligibleToVerify: (state) => {
             state.isEligibleToVerify = true;
         },
-        signIn: (state, action) => {
+        signIn: (state, action: PayloadAction<{ user: User }>) => {
             state.user = action.payload.user;
-            state.accessToken = action.payload.accessToken;
-            state.refreshToken = action.payload.refreshToken;
             state.isAuthenticated = true;
             state.isEligibleToVerify = false;
+            state.authLoading = false;
         },
-        signOut: (state) => {
+        signOutSuccess: (state) => {
             state.user = null;
-            state.accessToken = null;
-            state.refreshToken = null;
             state.isAuthenticated = false;
             state.isEligibleToVerify = false;
+            state.authLoading = false;
         },
-    }
+    },
 });
 
-export const { signIn, signOut, eligibleToVerify } = authSlice.actions;
+export const signOut = () => async (dispatch: AppDispatch) => {
+    try {
+        await apiClient.post("/users/sign-out");
+    } catch (error) {
+        console.error("Logout failed:", error);
+    } finally {
+        dispatch(signOutSuccess());
+    }
+};
+
+export const checkSession = () => async (dispatch: AppDispatch) => {
+    try {
+        const response = await apiClient.get("/users/current-user");
+        dispatch(signIn({ user: response.data.user }));
+    } catch {
+        dispatch(signOutSuccess());
+    }
+};
+
+export const { signIn, signOutSuccess, eligibleToVerify, setAuthLoading } = authSlice.actions;
 export default authSlice.reducer;
