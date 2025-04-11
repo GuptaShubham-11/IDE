@@ -149,6 +149,7 @@ const signIn = asyncHandler(async (req, res) => {
                     _id: user._id,
                     name: user.name,
                     email: user.email,
+                    verified: user.verified
                 },
                 accessToken,
                 refreshToken,
@@ -266,32 +267,69 @@ const emailVerification = asyncHandler(async (req, res) => {
 
 });
 
+const signOut = asyncHandler(async (req: AuthenticatedRequest, res) => {
+    await User.findByIdAndUpdate(
+        req.user?._id,
+        {
+            $unset: {
+                refreshToken: 1
+            }
+        },
+        { new: true }
+    );
+    res
+        .status(200)
+        .clearCookie("accessToken", {
+            httpOnly: true,
+            secure: true
+        })
+        .clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: true
+        })
+        .json(new ApiResponse(200, "User signed out successfully"));
+});
+
 const refreshAccessToken = asyncHandler(async (req, res) => {
     const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
     if (!refreshToken) {
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
         throw new ApiError(401, "No refresh token found");
     }
 
-    const decoded = jwt.verify(
-        refreshToken,
-        process.env.REFRESH_TOKEN_SECRET as string
-    ) as JwtPayload;
+    let decoded;
+    try {
+        decoded = jwt.verify(
+            refreshToken,
+            process.env.REFRESH_TOKEN_SECRET as string
+        ) as JwtPayload;
+    } catch (error) {
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+        throw new ApiError(401, "Invalid or expired refresh token");
+    }
 
     const user = await User.findById(decoded._id);
-
     if (!user) {
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
         throw new ApiError(400, "User not found");
     }
 
     const accessToken = user.generateAccessToken();
 
-    res.status(200).json(
-        new ApiResponse(200, "Access token refreshed successfully", {
-            accessToken,
+    res.status(200)
+        .cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: true,
         })
-    );
+        .json(
+            new ApiResponse(200, "Access token refreshed successfully", accessToken)
+        );
 });
+
 
 const getCurrentUser = asyncHandler(async (req: AuthenticatedRequest, res) => {
     res.status(200).json(
@@ -305,6 +343,7 @@ const getCurrentUser = asyncHandler(async (req: AuthenticatedRequest, res) => {
 export {
     signUp,
     signIn,
+    signOut,
     emailVerification,
     reSendVerificationEmail,
     refreshAccessToken,

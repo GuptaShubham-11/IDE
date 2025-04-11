@@ -4,7 +4,6 @@ import { ApiError } from "../utils/ApiError";
 import { asyncHandler } from "../utils/asyncHandler";
 import User, { IUser } from "../models/user";
 
-// Optional: You can define a proper User type
 interface DecodedToken extends JwtPayload {
     _id: string;
 }
@@ -20,7 +19,7 @@ export const verifyJWT = asyncHandler(
             req.header("Authorization")?.replace("Bearer ", "");
 
         if (!token) {
-            throw new ApiError(401, "Unauthorized. No token provided.");
+            throw new ApiError(400, "No token provided.");
         }
 
         try {
@@ -29,16 +28,20 @@ export const verifyJWT = asyncHandler(
                 process.env.ACCESS_TOKEN_SECRET as string
             ) as DecodedToken;
 
-            const user = await User.findById(decoded._id).select("-password -refreshToken");
+            if (!decoded) {
+                throw new ApiError(401, "Token verification failed.");
+            }
 
+            const user = await User.findById(decoded._id).select("-password -refreshToken");
             if (!user) {
-                throw new ApiError(401, "Invalid access token.");
+                throw new ApiError(404, "User not found.");
             }
 
             req.user = user;
             next();
         } catch (error: any) {
-            throw new ApiError(401, "Token verification failed.");
+            throw new ApiError(401, error.message || "Token verification failed.");
         }
     }
 );
+
