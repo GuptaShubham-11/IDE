@@ -6,7 +6,9 @@ import {
     emailVerification,
     reSendVerificationEmail,
     getCurrentUser,
-    refreshAccessToken
+    refreshAccessToken,
+    sendOtpToChangePassword,
+    changePassword
 } from '../controllers/user';
 import { verifyJWT } from '../middlewares/auth';
 
@@ -18,7 +20,8 @@ router.post('/sign-in', signIn);
 router.post('/verify-email', emailVerification);
 router.post('/resend-verification-email', reSendVerificationEmail);
 router.post('/refresh-access-token', refreshAccessToken);
-
+router.post('/send-otp-to-change-password', sendOtpToChangePassword);
+router.post('/change-password', changePassword);
 
 // Protected routes
 router.use(verifyJWT);
