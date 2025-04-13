@@ -63,11 +63,31 @@ const getCurrentUser = async () => {
     }
 }
 
+const getOtpToChangePassword = async (userData: any) => {
+    try {
+        const response = await apiClient.post('/users/send-otp-to-change-password', userData);
+        return response.data;
+    } catch (error: any) {
+        throw error.response.data;
+    }
+}
+
+const changePassword = async (userData: any) => {
+    try {
+        const response = await apiClient.post('/users/change-password', userData);
+        return response.data;
+    } catch (error: any) {
+        throw error.response.data;
+    }
+}
+
 export const userApi = {
     signUp,
     signIn,
     signOut,
     verifyEmail,
     resendVerificationEmail,
-    getCurrentUser
+    getCurrentUser,
+    getOtpToChangePassword,
+    changePassword
 }

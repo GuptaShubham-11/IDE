@@ -4,13 +4,19 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    /* Light */
+    /* Unauthorized Pages For Color Scheme */
     --color-bgL: #F8F9FA;
     --color-textL: #1A1B26;
     --color-primaryL: #3B82F6;
     --color-accentL: #E07A5F;
     --color-secondaryL: #6B7280;
 
+    /* Authorized Pages For Color Scheme */
+    --color-bgD: #121212;
+    --color-textD: #E0E0E0;
+    --color-primaryD: #3B82F6;
+    --color-accentD: #E07A5F;
+    --color-secondaryD: #BFBFBF;
 }
 
 body {
@@ -128,5 +134,14 @@ body {
 @layer base {
     * {
         @apply border-border outline-ring/50;
+    }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    }
+  body {
+    @apply bg-background text-foreground;
     }
 }
