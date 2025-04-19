@@ -4,19 +4,21 @@ import { ReactNode } from 'react';
 import Spinner from './Spinner';
 
 interface Props {
-    children: ReactNode;
+  children: ReactNode;
 }
 
 const PublicRoute = ({ children }: Props) => {
-    const { isAuthenticated, authLoading } = useAppSelector(state => state.auth);
+  const { isAuthenticated, authLoading } = useAppSelector(
+    (state) => state.auth
+  );
 
-    if (authLoading) return <Spinner />;
+  if (authLoading) return <Spinner />;
 
-    if (isAuthenticated) {
-        return <Navigate to="/dashboard" replace />;
-    }
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
-    return <>{children}</>;
+  return <>{children}</>;
 };
 
 export default PublicRoute;

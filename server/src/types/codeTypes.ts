@@ -1,10 +1,10 @@
 export interface CodeExecutionRequest {
-    language: 'node' | 'python';
-    code: string;
+  language: 'node' | 'python';
+  code: string;
 }
 
 export interface CodeExecutionResponse {
-    output: string;
-    error?: string;
-    exitCode: number;
+  output: string;
+  error?: string;
+  exitCode: number;
 }

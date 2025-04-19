@@ -7,108 +7,109 @@ import { Button } from '@/components/ui/button';
 import type { GlassAlertProps } from '@/components/Alert';
 
 export default function Authenticate({ flag = false }: { flag: boolean }) {
-    const [isReturningUser, setIsReturningUser] = useState(flag);
-    const [alert, setAlert] = useState<GlassAlertProps | null>(null);
-    const navigate = useNavigate();
+  const [isReturningUser, setIsReturningUser] = useState(flag);
+  const [alert, setAlert] = useState<GlassAlertProps | null>(null);
+  const navigate = useNavigate();
 
-    return (
-        <div className="min-h-screen w-full bg-bgL flex flex-col items-center justify-center px-4 py-12">
-            {/* Alert */}
-            <AnimatePresence>
-                {alert && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full max-w-xl px-4 z-50"
-                    >
-                        <Alert
-                            type={alert.type}
-                            title={alert.title}
-                            message={alert.message}
-                            onClose={() => setAlert(null)}
-                        />
-                    </motion.div>
-                )}
-            </AnimatePresence>
+  return (
+    <div className="min-h-screen w-full bg-bgL flex flex-col items-center justify-center px-4 py-12">
+      {/* Alert */}
+      <AnimatePresence>
+        {alert && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full max-w-xl px-4 z-50"
+          >
+            <Alert
+              type={alert.type}
+              title={alert.title}
+              message={alert.message}
+              onClose={() => setAlert(null)}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            {/* Back Button */}
-            <Button
-                variant="ghost"
-                className="absolute top-4 left-4 rounded hover:bg-secondaryL/10"
-                onClick={() => navigate('/')}
-            >
-                <ArrowLeft />
-            </Button>
+      {/* Back Button */}
+      <Button
+        variant="ghost"
+        className="absolute top-4 left-4 rounded hover:bg-secondaryL/10"
+        onClick={() => navigate('/')}
+      >
+        <ArrowLeft />
+      </Button>
 
-            <div className="relative w-full max-w-md mt-2 space-y-8">
-                {/* Glow Background */}
-                <motion.div
-                    className="absolute -inset-6 rounded-3xl blur-2xl opacity-20 z-0"
-                    style={{
-                        background: 'linear-gradient(135deg, var(--color-primaryL), var(--color-accentL))',
-                    }}
-                    animate={{ opacity: [0.15, 0.25, 0.15] }}
-                    transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
-                />
+      <div className="relative w-full max-w-md mt-2 space-y-8">
+        {/* Glow Background */}
+        <motion.div
+          className="absolute -inset-6 rounded-3xl blur-2xl opacity-20 z-0"
+          style={{
+            background:
+              'linear-gradient(135deg, var(--color-primaryL), var(--color-accentL))',
+          }}
+          animate={{ opacity: [0.15, 0.25, 0.15] }}
+          transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
+        />
 
-                {/* Toggle Switch */}
-                <div className="relative z-10 bg-secondaryL/10 rounded p-1 flex items-center justify-between backdrop-blur-sm shadow-md">
-                    <motion.div
-                        className="absolute h-[calc(100%-6px)] w-1/2 bg-bgL rounded shadow transition-all"
-                        initial={false}
-                        animate={{ left: isReturningUser ? '50%' : '3px' }}
-                        transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-                    />
-                    <button
-                        onClick={() => {
-                            setIsReturningUser(false);
-                            navigate('/authenticate/signup');
-                        }}
-                        className={`z-10 w-1/2 py-2 flex items-center justify-center gap-2 text-sm font-medium transition-all duration-300 ${!isReturningUser ? 'text-textL' : 'text-secondaryL'}`}
-                    >
-                        <UserPlus className="w-4 h-4" />
-                        Create
-                    </button>
-                    <button
-                        onClick={() => {
-                            setIsReturningUser(true);
-                            navigate('/authenticate/signin');
-                        }}
-                        className={`z-10 w-1/2 py-2 flex items-center justify-center gap-2 text-sm font-medium transition-all duration-300 ${isReturningUser ? 'text-textL' : 'text-secondaryL'}`}
-                    >
-                        <LogIn className="w-4 h-4" />
-                        Login
-                    </button>
-                </div>
-
-                {/* Form Container */}
-                <div className="relative z-10">
-                    <AnimatePresence mode="wait">
-                        {isReturningUser ? (
-                            <motion.div
-                                key="signin"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                <SignIn setAlert={setAlert} />
-                            </motion.div>
-                        ) : (
-                            <motion.div
-                                key="signup"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                <SignUp setAlert={setAlert} />
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
-            </div>
+        {/* Toggle Switch */}
+        <div className="relative z-10 bg-secondaryL/10 rounded p-1 flex items-center justify-between backdrop-blur-sm shadow-md">
+          <motion.div
+            className="absolute h-[calc(100%-6px)] w-1/2 bg-bgL rounded shadow transition-all"
+            initial={false}
+            animate={{ left: isReturningUser ? '50%' : '3px' }}
+            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+          />
+          <button
+            onClick={() => {
+              setIsReturningUser(false);
+              navigate('/authenticate/signup');
+            }}
+            className={`z-10 w-1/2 py-2 flex items-center justify-center gap-2 text-sm font-medium transition-all duration-300 ${!isReturningUser ? 'text-textL' : 'text-secondaryL'}`}
+          >
+            <UserPlus className="w-4 h-4" />
+            Create
+          </button>
+          <button
+            onClick={() => {
+              setIsReturningUser(true);
+              navigate('/authenticate/signin');
+            }}
+            className={`z-10 w-1/2 py-2 flex items-center justify-center gap-2 text-sm font-medium transition-all duration-300 ${isReturningUser ? 'text-textL' : 'text-secondaryL'}`}
+          >
+            <LogIn className="w-4 h-4" />
+            Login
+          </button>
         </div>
-    );
+
+        {/* Form Container */}
+        <div className="relative z-10">
+          <AnimatePresence mode="wait">
+            {isReturningUser ? (
+              <motion.div
+                key="signin"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+              >
+                <SignIn setAlert={setAlert} />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="signup"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+              >
+                <SignUp setAlert={setAlert} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
+  );
 }

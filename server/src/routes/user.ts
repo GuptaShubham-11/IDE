@@ -1,14 +1,14 @@
 import { Router } from 'express';
 import {
-    signUp,
-    signIn,
-    signOut,
-    emailVerification,
-    reSendVerificationEmail,
-    getCurrentUser,
-    refreshAccessToken,
-    sendOtpToChangePassword,
-    changePassword
+  signUp,
+  signIn,
+  signOut,
+  emailVerification,
+  reSendVerificationEmail,
+  getCurrentUser,
+  refreshAccessToken,
+  sendOtpToChangePassword,
+  changePassword,
 } from '../controllers/user';
 import { verifyJWT } from '../middlewares/auth';
 
